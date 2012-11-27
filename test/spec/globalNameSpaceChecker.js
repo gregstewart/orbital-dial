@@ -16,7 +16,8 @@ describe('our use of global namespace', function () {
         var dubious_global_things = [];
         var allowed_in_global = [
             'executeJasmineSpecs',
-            'reporter'
+            'reporter',
+            'Knob'
         ];
         for (var prop in _captured_global_namespace) {
             if (!in_array(prop, allowed_in_global)) {
