@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jasmine Spec Runner</title>
+
+    <link rel="stylesheet" type="text/css" href="vendor/jasmine-1.2.0/jasmine.css">
+
+    <script src="vendor/jasmine-1.2.0/jasmine.js"></script>
+    <script src="vendor/jasmine-1.2.0/jasmine-html.js"></script>
+    <script src="vendor/jquery/jquery-1.7.2.min.js"></script>
+    <script src="vendor/jasmine-1.2.0/jasmine-jquery.js"></script>
+
+
+    <!-- Include helper files -->
+    <script src="spec/helpers/globalNamespace.js"></script>
+
+    <!-- include source files here... -->
+    <script src="../src/js/Knob.js"></script>
+    <!-- include spec files here... -->
+    <script src="spec/set-up.spec.js"></script>
+    <!--Do me last-->
+    <script src="spec/globalNamespaceChecker.js"></script>
+
+
+    <script type="text/javascript">
+        (function () {
+            var jasmineEnv = jasmine.getEnv();
+            jasmineEnv.updateInterval = 1000;
+
+            var htmlReporter = new jasmine.HtmlReporter();
+
+            jasmineEnv.addReporter(htmlReporter);
+
+            jasmineEnv.specFilter = function (spec) {
+                return htmlReporter.specFilter(spec);
+            };
+
+            var currentWindowOnload = window.onload;
+
+            window.onload = function () {
+                if (currentWindowOnload) {
+                    currentWindowOnload();
+                }
+                execJasmine();
+            };
+
+            function execJasmine() {
+                jasmineEnv.execute();
+            }
+
+        })();
+    </script>
+
+</head>
+
+<body>
+</body>
+</html>
