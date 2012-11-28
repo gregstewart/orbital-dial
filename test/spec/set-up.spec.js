@@ -73,10 +73,24 @@ describe('initialise the object', function () {
         });
     });
 
-    describe('calculate stuff', function() {
-        it('should calculate the radius', function() {
+    describe('event bindings', function() {
+        it('should attach click/touch events to the container', function() {
+            var events = this.knob.container.data('events');
+            expect(typeof events).toBeDefined();
+            expect(events.mousedown).toBeTruthy();
+        });
 
-            expect(this.knob.radius).toBe(75);
+        it('should on mouse down bind a mouse event to the document and mouse up unbind the event', function() {
+            var moveSpy = sinon.spy(this.knob,'move');
+            expect($(document).data('events')).toBeUndefined();
+
+            this.knob.container.trigger('mousedown');
+            expect(moveSpy).toHaveBeenCalled();
+            expect($(document).data('events')).toBeDefined();
+            expect($(document).data('events').mousemove).toBeTruthy();
+
+            $(document).trigger('mouseup');
+            expect($(document).data('events')).toBeUndefined();
         });
     });
 });

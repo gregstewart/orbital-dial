@@ -16,24 +16,51 @@
         <link rel="stylesheet" href="css/main.css">
         <style>
             #Knob {
-                border: 1px solid;
                 width: 200px;
                 height: 200px;
                 position: relative;
+                background-image: url('img/knob.png');
+                background-size: contain;
+                background-repeat: no-repeat;
             }
 
             #Slider {
+                display: none;
                 position: absolute;
-                border: 1px solid red;
-                height: 50px;
-                width: 50px;
+                height: 25px;
+                width: 25px;
+                background-image: url('img/inner-circle.png');
+                background-size: contain;
+                background-repeat: no-repeat;
             }
         </style>
+
+        <!--[if lt IE 9]>
+        <style>
+            #Knob {
+                background-image: none;
+                filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+                    src='img/knob.png',
+                    sizingMethod='scale');
+
+                -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/knob.png', sizingMethod='scale')";
+            }
+            #Slider {
+                background-image: none;
+                filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+                    src='img/inner-circle.png',
+                    sizingMethod='scale');
+
+                -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/inner-circle.png', sizingMethod='scale')";
+            }
+        </style>
+        <![endif]-->
+
         <script src="js/vendor/modernizr-2.6.2.min.js"></script>
     </head>
     <body>
 
-        <div id="Knob"><div id="Slider" data-start-angle="300"></div></div>
+        <div id="Knob"><div id="Slider" data-start-angle="300" data-height="25" data-width="25"></div></div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.2.min.js"><\/script>')</script>
