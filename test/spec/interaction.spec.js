@@ -10,7 +10,7 @@ describe('mouse movement', function() {
         var moveSpy = sinon.spy(this.knob, 'move'),
             relativePositionSpy = sinon.spy(this.knob, 'calculateRelativePosition'),
             angleSpy = sinon.spy(this.knob, 'calculatePIAngle'),
-            calculatePositionSpy = sinon.spy(this.knob, 'calculatePosition'),
+            calculatePositionSpy = sinon.spy(this.knob, 'calculatePositionRelatedToCenter'),
             drawSpy = sinon.spy(this.knob, 'draw');
 
         var e = new jQuery.Event('mousedown'),

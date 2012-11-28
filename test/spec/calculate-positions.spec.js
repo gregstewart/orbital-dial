@@ -12,15 +12,15 @@ describe('calculate inner element positions', function () {
 
     describe('give an angle we should be able to figure out the x/y position', function() {
         it('for an angle of 90 it should return the correct position', function() {
-            var result = this.knob.calculatePosition(0.5*Math.PI);
-            expect(result.x).toBe(150);
-            expect(result.y).toBe(75);
+            var result = this.knob.calculatePositionRelatedToCenter(0.5*Math.PI);
+            expect(Math.round(result.x)).toBe(0);
+            expect(Math.round(result.y)).toBe(75);
         });
 
         it('for an angle of 270 it should return the correct position', function() {
-            var result = this.knob.calculatePosition(1.5*Math.PI);
-            expect(Math.floor(result.x)).toBe(0);
-            expect(Math.floor(result.y)).toBe(75);
+            var result = this.knob.calculatePositionRelatedToCenter(1.5*Math.PI);
+            expect(Math.round(result.x)).toBe(0);
+            expect(Math.round(result.y)).toBe(-75);
         });
 
     });

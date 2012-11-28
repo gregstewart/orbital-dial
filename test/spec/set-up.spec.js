@@ -36,17 +36,22 @@ describe('initialise the object', function () {
         expect(this.knob.innerElementHeight).toBe(50);
     });
 
+    it('should not need to have a default outer element', function() {
+        expect(typeof this.knob.outerElement).toBe('undefined');
+    });
+
     it('should have a default starting angle', function() {
         expect(this.knob.startAngle).toBe(0);
     });
 
     describe('override defaults', function () {
         beforeEach(function() {
-            $('#sandbox').append('<div class="my-knob" data-width="300" data-height="300"><div class="slider" data-width="40" data-height="50" data-start-angle="92"></div> </div>');
+            $('#sandbox').append('<div class="my-knob" data-width="300" data-height="300"><div class="slider" data-width="40" data-height="50" data-start-angle="92"></div><div class="outer-slider" data-width="40" data-height="50" ></div></div>');
             this.containerSelector = '.my-knob';
             this.innerSelector = '.slider';
-            this.customKnob =  new Knob({containerSelector:this.containerSelector, innerSelector:this.innerSelector});
+            this.outerSelector = '.outer-slider';
 
+            this.customKnob =  new Knob({containerSelector:this.containerSelector, innerSelector:this.innerSelector, outerSelector: this.outerSelector});
         });
 
         it('should allow me to pass in a container to bind to', function() {
@@ -62,11 +67,21 @@ describe('initialise the object', function () {
             expect(this.customKnob.innerElement).toBe(this.innerSelector);
         });
 
-
         it('should allow me to override the default height and width of the inner element', function () {
             expect(this.customKnob.innerElementWidth).toBe(40);
             expect(this.customKnob.innerElementHeight).toBe(50);
         });
+
+        it('should allow me to me to add an outer element selector', function () {
+            expect(typeof this.customKnob.outerElement).not.toBe('undefined');
+            expect(this.customKnob.outerElement).toBe(this.outerSelector);
+        });
+
+        it('should allow me to set height and width of the outer element', function () {
+            expect(this.customKnob.outerElementWidth).toBe(40);
+            expect(this.customKnob.outerElementHeight).toBe(50);
+        });
+
 
         it('should have an overriden starting angle', function() {
             expect(this.customKnob.startAngle).toBe(92);
