@@ -13,4 +13,4 @@ Choose one of the following options:
 
 ## Features
 
-* Cross-browser compatible (Chrome, Opera, Safari, Firefox 3.6+, IE7+).
+* Tested on Chrome 23, Opera 12.11, Safari 6.0.2, Firefox 17, IE6+

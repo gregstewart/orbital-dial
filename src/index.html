@@ -88,8 +88,11 @@
         <script src="js/Knob.js"></script>
         <script>
             $(document).ready(function () {
-                var knob = new Knob({outerSelector: '#OuterSlider'});
-            })
+                var knob = new Knob({outerSelector: '#OuterSlider',
+                                        onMoveCallBack: function() { console.log('moving!'); },
+                                        onMoveEndCallBack: function() { console.log('Done moving the dial');}
+                                    });
+            });
         </script>
 
 

@@ -32,6 +32,9 @@ Knob.prototype.init = function (options) {
     this.innerRatio = this.innerElement.data('ratio') || 1 / 3;
 
     this.startAngle = this.innerElement.data('start-angle') || 0;
+
+    this.onMoveCallBack = (typeof options !== 'undefined' && typeof options.onMoveCallBack !== 'undefined') ? options.onMoveCallBack : function() {};
+    this.onMoveEndCallBack = (typeof options !== 'undefined' && typeof options.onMoveEndCallBack !== 'undefined') ? options.onMoveEndCallBack : function() {};
 };
 
 Knob.prototype.bindEvents = function () {
@@ -51,8 +54,10 @@ Knob.prototype.move = function (event) {
         temp = self.calculatePIAngle(temp.x, temp.y);
         temp = self.calculatePositionRelatedToCenter(temp);
         self.draw(temp);
+        self.onMoveCallBack();
     }).on('mouseup touchend', function (e) {
             $(document).off('mousemove mouseup touchmove touchend');
+            self.onMoveEndCallBack();
         });
 };
 
