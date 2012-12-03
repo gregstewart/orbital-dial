@@ -42,6 +42,7 @@ Knob.prototype.bindEvents = function () {
     this.innerElement.off('**');
 
     this.container.on('mousedown touchstart', function (e) {
+        e.preventDefault();
         self.move(e);
     });
 };
@@ -49,13 +50,19 @@ Knob.prototype.bindEvents = function () {
 Knob.prototype.move = function (event) {
     var self = this;
     $(document).on('mousemove touchmove',function (e) {
-        var temp = null;
-        temp = self.calculateRelativePosition(e.pageX, e.pageY);
+        e.preventDefault();
+        var temp = null,
+            x = (typeof e.pageX !== 'undefined') ? e.pageX : e.originalEvent.touches[0].pageX,
+            y = (typeof e.pageY !== 'undefined') ? e.pageY : e.originalEvent.touches[0].pageY;
+
+        temp = self.calculateRelativePosition(x, y);
         temp = self.calculatePIAngle(temp.x, temp.y);
         temp = self.calculatePositionRelatedToCenter(temp);
         self.draw(temp);
         self.onMoveCallBack();
+
     }).on('mouseup touchend', function (e) {
+            e.preventDefault();
             $(document).off('mousemove mouseup touchmove touchend');
             self.onMoveEndCallBack();
         });

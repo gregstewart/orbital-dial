@@ -48,12 +48,15 @@
         <!--[if lt IE 9]>
         <style>
             #Knob {
+
+                mixin ('path/tp/Image')
+
                 background-image: none;
                 filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
                     src='img/knob.png',
                     sizingMethod='scale');
 
-                -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='img/knob.png', sizingMethod='scale')";
+                -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src=" + $path +     ", sizingMethod='scale')";
             }
             #Slider {
                 background-image: none;
