@@ -1,131 +1,123 @@
 function Knob(options) {
     'use strict';
+    var self = this, container, innerElement, outerElement, outerElementWidth, outerElementHeight, outerRatio, containerWidth, containerHeight, innerElementWidth, innerElementHeight, innerRatio, startAngle, onMoveCallBack, onMoveEndCallBack, radius;
 
-    this.init(options);
-    this.radius = this.calculateRadius();
-    this.bindEvents();
-    this.draw(this.calculatePositionRelatedToCenter(this.startAngle / 180 * Math.PI));
+    function draw(position) {
+        var containerLength = Math.min(containerWidth, containerHeight) / 2,
+            orbitingElementLength = Math.max(innerElementWidth, innerElementHeight) / 2,
+            x = containerLength + position.y * innerRatio - orbitingElementLength,
+            y = containerLength - position.x * innerRatio - orbitingElementLength;
 
-    if (!this.innerElement.is(':visible')) {
-        this.innerElement.show();
+        innerElement.css({
+            left : x,
+            top : y
+        });
+
+        if (typeof outerElement !== 'undefined') {
+            orbitingElementLength = Math.max(outerElementWidth, outerElementHeight) / 2;
+            x = containerLength + position.y * outerRatio  - orbitingElementLength;
+            y = containerLength - position.x * outerRatio - orbitingElementLength;
+
+            outerElement.css({
+                left : x,
+                top : y
+            });
+        }
     }
 
-    if (typeof this.outerElement !== 'undefined' && !this.outerElement.is(':visible')) {
-        this.outerElement.show();
-    }
-}
+    self.drawByAngle = function (angle) {
+        draw(new Triangle(radius, angle).toPoint());
+    };
 
-Knob.prototype.init = function (options) {
-
-    this.container = (typeof options !== 'undefined' && typeof options.containerSelector !== 'undefined') ? $(options.containerSelector) : $('#Knob');
-    this.innerElement = (typeof options !== 'undefined' && typeof options.innerSelector !== 'undefined') ? $(options.innerSelector) : $('#Slider');
-    if ((typeof options !== 'undefined' && typeof options.outerSelector !== 'undefined')) {
-        this.outerElement = $(options.outerSelector);
-        this.outerElementWidth = this.outerElement.data('width') || 50;
-        this.outerElementHeight = this.outerElement.data('height') || 50;
-        this.outerRatio = this.outerElement.data('ratio') || 6.5 / 7;
-    }
-    this.containerWidth = this.container.data('width') || 200;
-    this.containerHeight = this.container.data('height') || 200;
-    this.innerElementWidth = this.innerElement.data('width') || 50;
-    this.innerElementHeight = this.innerElement.data('height') || 50;
-    this.innerRatio = this.innerElement.data('ratio') || 1 / 3;
-
-    this.startAngle = this.innerElement.data('start-angle') || 0;
-
-    this.onMoveCallBack = (typeof options !== 'undefined' && typeof options.onMoveCallBack !== 'undefined') ? options.onMoveCallBack : function() {};
-    this.onMoveEndCallBack = (typeof options !== 'undefined' && typeof options.onMoveEndCallBack !== 'undefined') ? options.onMoveEndCallBack : function() {};
-};
-
-Knob.prototype.bindEvents = function () {
-    var self = this;
-    this.innerElement.off('**');
-
-    this.container.on('mousedown touchstart', function (e) {
+    function makeMove(e) {
+        var temp, tempAngle, x, y, point, size;
         e.preventDefault();
-        self.move(e);
-    });
-};
+        x = (typeof e.pageX !== 'undefined') ? e.pageX : ((typeof e.originalEvent !== 'undefined') ? e.originalEvent.touches[0].pageX : null);
+        y = (typeof e.pageY !== 'undefined') ? e.pageY : ((typeof e.originalEvent !== 'undefined') ? e.originalEvent.touches[0].pageY : null);
+        point = new Point(x, y);
+        size = (Math.max(containerWidth, containerHeight)) / 2;
+        temp = point.shift(container.offset().left + size, container.offset().top + size);
+        tempAngle = Math.round(temp.calculatePiAngle() / Math.PI * 180);
+        self.drawByAngle(tempAngle);
+        onMoveCallBack(tempAngle);
+    }
 
-Knob.prototype.move = function (event) {
-    var self = this;
-    $(document).on('mousemove touchmove',function (e) {
-        e.preventDefault();
-        var temp = null,
-            x = (typeof e.pageX !== 'undefined') ? e.pageX : e.originalEvent.touches[0].pageX,
-            y = (typeof e.pageY !== 'undefined') ? e.pageY : e.originalEvent.touches[0].pageY;
-
-        temp = self.calculateRelativePosition(x, y);
-        temp = self.calculatePIAngle(temp.x, temp.y);
-        temp = self.calculatePositionRelatedToCenter(temp);
-        self.draw(temp);
-        self.onMoveCallBack();
-
-    }).on('mouseup touchend', function (e) {
+    function move() {
+        $(document).on('mousemove touchmove', function (e) {
             e.preventDefault();
-            $(document).off('mousemove mouseup touchmove touchend');
-            self.onMoveEndCallBack();
-        });
-};
-
-Knob.prototype.calculateRadius = function () {
-
-    return Math.min(this.containerWidth, this.containerHeight) / 2 - Math.max(this.innerElementWidth, this.innerElementHeight) / 2;
-
-};
-
-Knob.prototype.calculatePositionRelatedToCenter = function (piAngle) {
-
-    var position = {},
-        angle = piAngle;
-
-    position.x = this.radius * Math.cos(angle);
-    position.y = this.radius * Math.sin(angle);
-
-    return position;
-
-};
-
-Knob.prototype.calculatePIAngle = function (x, y) {
-    var angle = Math.atan2(x, y);
-    if (angle < 0) {
-        angle += Math.PI * 2;
+            makeMove(e);
+        }).on('mouseup touchend', function (e) {
+                $(document).off('mousemove mouseup touchmove touchend');
+                e.preventDefault();
+                makeMove(e);
+            });
     }
-    return angle;
-};
 
-Knob.prototype.calculateRelativePosition = function (x, y) {
-    var position = {},
-        offset = this.container.offset(),
-        size = (Math.max(this.containerWidth, this.containerHeight)) / 2;
+    function calculateRadius() {
+        return Math.min(containerWidth, containerHeight) / 2 - Math.max(innerElementWidth, innerElementHeight) / 2;
+    }
 
-    position.x = x - offset.left - size;
-    position.y = offset.top + size - y;
-
-    return position;
-};
-
-Knob.prototype.draw = function (position) {
-
-    var containerLength = Math.min(this.containerWidth, this.containerHeight) / 2,
-        orbitingElementLength = Math.max(this.innerElementWidth, this.innerElementHeight) / 2,
-        x = containerLength + position.y * this.innerRatio - orbitingElementLength,
-        y = containerLength - position.x * this.innerRatio - orbitingElementLength;
-
-    this.innerElement.css({
-        left:x,
-        top:y
-    });
-
-    if (typeof this.outerElement !== 'undefined') {
-
-        orbitingElementLength = Math.max(this.outerElementWidth, this.outerElementHeight) / 2;
-        x = containerLength + position.y * this.outerRatio  - orbitingElementLength;
-        y = containerLength - position.x * this.outerRatio - orbitingElementLength;
-
-        this.outerElement.css({
-            left:x,
-            top:y
+    function bindEvents() {
+        innerElement.off('**');
+        container.on('mousedown touchstart', function (e) {
+            e.preventDefault();
+            move(e);
         });
     }
-};
+
+    function init() {
+        var allOptions, setOptions = options || {};
+
+        allOptions = {
+            containerSelector: "#Knob",
+            innerSelector: "#Slider",
+            outerElementWidth: 50,
+            outerElementHeight: 50,
+            outerRatio: (6.5 / 7),
+            containerWidth: 200,
+            containerHeight: 200,
+            innerElementWidth: 50,
+            innerElementHeight: 50,
+            innerRatio: (1 / 3),
+            startAngle: 0,
+            onMoveCallBack : function () {},
+            onMoveEndCallBack : function () {}
+        };
+
+        $.extend(allOptions, setOptions);
+
+        container = $(allOptions.containerSelector);
+        innerElement = $(allOptions.innerSelector);
+
+        if (typeof allOptions.outerSelector !== 'undefined') {
+            outerElement = $(allOptions.outerSelector);
+            outerElementWidth = outerElement.data('width') || allOptions.outerElementWidth;
+            outerElementHeight = outerElement.data('height') || allOptions.outerElementHeight;
+            outerRatio = outerElement.data('ratio') || allOptions.outerRatio;
+        }
+
+        containerWidth = container.data('width') || allOptions.containerWidth;
+        containerHeight = container.data('height') || allOptions.containerHeight;
+        innerElementWidth = innerElement.data('width') || allOptions.innerElementWidth;
+        innerElementHeight = innerElement.data('height') || allOptions.innerElementHeight;
+        innerRatio = innerElement.data('ratio') || allOptions.innerRatio;
+        startAngle = innerElement.data('start-angle') || allOptions.startAngle;
+
+        onMoveCallBack = allOptions.onMoveCallBack;
+        onMoveEndCallBack = allOptions.onMoveEndCallBack;
+        radius = calculateRadius();
+
+        bindEvents();
+
+        draw(new Triangle(radius, startAngle).toPoint());
+
+        if (!innerElement.is(':visible')) {
+            innerElement.show();
+        }
+
+        if (typeof outerElement !== 'undefined' && !outerElement.is(':visible')) {
+            outerElement.show();
+        }
+    }
+    init();
+}
