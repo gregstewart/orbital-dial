@@ -43,14 +43,14 @@ function Knob(options) {
     }
 
     function move() {
-        $(document).on('mousemove touchmove', function (e) {
+        $(document).on('mousemove.dial touchmove.dial', function (e) {
             e.preventDefault();
             makeMove(e);
-        }).on('mouseup touchend', function (e) {
-                $(document).off('mousemove mouseup touchmove touchend');
-                e.preventDefault();
-                makeMove(e);
-            });
+        }).on('mouseup.dial touchend.dial', function (e) {
+            $(document).off('.dial');
+            e.preventDefault();
+            makeMove(e);
+        });
     }
 
     function calculateRadius() {
@@ -59,7 +59,7 @@ function Knob(options) {
 
     function bindEvents() {
         innerElement.off('**');
-        container.on('mousedown touchstart', function (e) {
+        container.on('mousedown.dial touchstart.dial', function (e) {
             e.preventDefault();
             move(e);
         });
