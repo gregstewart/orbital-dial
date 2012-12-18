@@ -27,7 +27,7 @@ function Knob(options) {
 
     self.getCurrentPoint = function () {
         return currentPoint;
-    }
+    };
 
     self.drawByAngle = function (angle) {
         draw(new Triangle(radius, angle).toPoint());
