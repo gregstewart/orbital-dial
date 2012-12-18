@@ -2,6 +2,14 @@ function Knob(options) {
     'use strict';
     var self = this, container, innerElement, outerElement, outerElementWidth, outerElementHeight, outerRatio, containerWidth, containerHeight, innerElementWidth, innerElementHeight, innerRatio, startAngle, onMoveCallBack, onMoveEndCallBack, radius, currentPoint;
 
+    self.getCurrentPoint = function () {
+        return currentPoint;
+    };
+
+    self.drawByAngle = function (angle) {
+        draw(new Triangle(radius, angle).toPoint());
+    };
+
     function draw(position) {
         var containerLength = Math.min(containerWidth, containerHeight) / 2,
             orbitingElementLength = Math.max(innerElementWidth, innerElementHeight) / 2,
@@ -25,13 +33,11 @@ function Knob(options) {
         }
     }
 
-    self.getCurrentPoint = function () {
-        return currentPoint;
-    };
-
-    self.drawByAngle = function (angle) {
-        draw(new Triangle(radius, angle).toPoint());
-    };
+    function setCurrentPoint(e) {
+        var x = (typeof e.pageX !== 'undefined') ? e.pageX : ((typeof e.originalEvent !== 'undefined') ? e.originalEvent.touches[0].pageX : null),
+            y = (typeof e.pageY !== 'undefined') ? e.pageY : ((typeof e.originalEvent !== 'undefined') ? e.originalEvent.touches[0].pageY : null);
+        currentPoint = new Point(x, y);
+    }
 
     function makeMove(e) {
         var temp, tempAngle, x, y, size;
@@ -46,14 +52,10 @@ function Knob(options) {
     function move() {
         $(document).on('mousedown.dial touchstart.dial', function (e) {
             e.preventDefault();
-            var x = (typeof e.pageX !== 'undefined') ? e.pageX : ((typeof e.originalEvent !== 'undefined') ? e.originalEvent.touches[0].pageX : null);
-            var y = (typeof e.pageY !== 'undefined') ? e.pageY : ((typeof e.originalEvent !== 'undefined') ? e.originalEvent.touches[0].pageY : null);
-            currentPoint = new Point(x, y);
+            setCurrentPoint(e);
         }).on('mousemove.dial touchmove.dial', function (e) {
             e.preventDefault();
-            var x = (typeof e.pageX !== 'undefined') ? e.pageX : ((typeof e.originalEvent !== 'undefined') ? e.originalEvent.touches[0].pageX : null);
-            var y = (typeof e.pageY !== 'undefined') ? e.pageY : ((typeof e.originalEvent !== 'undefined') ? e.originalEvent.touches[0].pageY : null);
-            currentPoint = new Point(x, y);
+            setCurrentPoint(e);
             makeMove(e);
         }).on('mouseup.dial touchend.dial', function (e) {
             $(document).off('.dial');
