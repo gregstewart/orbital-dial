@@ -2,14 +2,6 @@ function Knob(options) {
     'use strict';
     var self = this, container, innerElement, outerElement, outerElementWidth, outerElementHeight, outerRatio, containerWidth, containerHeight, innerElementWidth, innerElementHeight, innerRatio, startAngle, onMoveCallBack, onMoveEndCallBack, radius, currentPoint;
 
-    self.getCurrentPoint = function () {
-        return currentPoint;
-    };
-
-    self.drawByAngle = function (angle) {
-        draw(new Triangle(radius, angle).toPoint());
-    };
-
     function draw(position) {
         var containerLength = Math.min(containerWidth, containerHeight) / 2,
             orbitingElementLength = Math.max(innerElementWidth, innerElementHeight) / 2,
@@ -130,5 +122,14 @@ function Knob(options) {
             outerElement.show();
         }
     }
+
+    self.getCurrentPoint = function () {
+        return currentPoint;
+    };
+
+    self.drawByAngle = function (angle) {
+        draw(new Triangle(radius, angle).toPoint());
+    };
+
     init();
 }
