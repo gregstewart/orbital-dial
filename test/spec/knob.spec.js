@@ -64,4 +64,32 @@ describe("knob", function() {
 
         expect(callback).toHaveBeenCalled();
     });
+
+    it('should on touchend use the last known x/y', function () {
+        var callback = sinon.spy(), touchStartEvent, touchEndEvent, touchMoveEvent, knob = new Knob({onMoveCallBack:callback}), currentPosition;
+
+        touchStartEvent = new jQuery.Event('touchstart');
+        touchStartEvent.pageX = 10;
+        touchStartEvent.pageY = 10;
+
+        $("#Knob").trigger(touchStartEvent);
+
+        touchMoveEvent = new jQuery.Event('touchmove');
+        touchMoveEvent.pageX = 40;
+        touchMoveEvent.pageY = 75;
+
+        $("#Knob").trigger(touchMoveEvent);
+
+        currentPosition = knob.getCurrentPoint();
+        expect(currentPosition.x).toBe(40);
+        expect(currentPosition.y).toBe(75);
+
+
+        touchEndEvent = new jQuery.Event('touchend');
+        $("#Knob").trigger(touchEndEvent);
+
+        currentPosition = knob.getCurrentPoint();
+        expect(currentPosition.x).toBe(40);
+        expect(currentPosition.y).toBe(75);
+    });
 });
