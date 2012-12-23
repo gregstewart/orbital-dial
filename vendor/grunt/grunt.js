@@ -3,7 +3,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     lint: {
-      all: ['grunt.js', '../../src/js/Knob.js', '../../src/js/triangle.js', '../../src/js/point.js']
+      all: ['grunt.js', '../../src/js/orbital-dial.js', '../../src/js/triangle.js', '../../src/js/point.js']
     },
     jshint: {
       options: {
@@ -18,8 +18,8 @@ module.exports = function(grunt) {
     },
     min: {
       dist: {
-        src: ['../../src/js/Knob.js', '../../src/js/triangle.js', '../../src/js/point.js'],
-        dest: '../../dist/knob.min.js'
+        src: ['../../src/js/orbital-dial.js', '../../src/js/triangle.js', '../../src/js/point.js'],
+        dest: '../../dist/orbital-dial.min.js'
       }
     },
     uglify: {}

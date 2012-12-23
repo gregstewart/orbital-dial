@@ -1,4 +1,4 @@
-function Knob(options) {
+function OrbitalDial(options) {
     'use strict';
     var self = this, container, innerElement, outerElement, outerElementWidth, outerElementHeight, outerRatio, containerWidth, containerHeight, innerElementWidth, innerElementHeight, innerRatio, startAngle, onMoveCallBack, onMoveEndCallBack, radius, currentPoint;
 
@@ -72,7 +72,7 @@ function Knob(options) {
         var allOptions, setOptions = options || {};
 
         allOptions = {
-            containerSelector: "#Knob",
+            containerSelector: "#OrbitalDial",
             innerSelector: "#Slider",
             outerElementWidth: 50,
             outerElementHeight: 50,

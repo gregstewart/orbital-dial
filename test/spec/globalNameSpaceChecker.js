@@ -17,7 +17,7 @@ describe('our use of global namespace', function () {
         var allowed_in_global = [
             'executeJasmineSpecs',
             'reporter',
-            'Knob',
+            'OrbitalDial',
             'Point',
             'Triangle'
         ];

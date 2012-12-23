@@ -1,9 +1,9 @@
 describe('Point', function () {
     beforeEach(function() {
         setFixtures(sandbox());
-        $('#sandbox').append('<div id="Knob"><div id="Slider"></div></div>');
+        $('#sandbox').append('<div id="OrbitalDial"><div id="Slider"></div></div>');
 
-        this.knob = new Knob();
+        this.orbitalDial = new OrbitalDial();
     });
 
     describe('calculate pi angles', function() {
